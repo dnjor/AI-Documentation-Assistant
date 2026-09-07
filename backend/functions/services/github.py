@@ -38,3 +38,33 @@ def github_request(endpoint):
         raise Exception(response.json())
 
     return response.json()
+
+
+def get_repo_info(url):
+    owner, repo = extract_repo(url)
+    endpoint = f"/repos/{owner}/{repo}"
+    return github_request(endpoint)
+
+
+def get_repo_readme(url):
+    owner, repo = extract_repo(url)
+    endpoint = f"/repos/{owner}/{repo}/readme"
+    return github_request(endpoint)
+
+
+def get_repo_file_content(url, file_path):
+    owner, repo = extract_repo(url)
+    endpoint = f"/repos/{owner}/{repo}/contents/{file_path}"
+    return github_request(endpoint)
+
+
+def get_repo_commits(url):
+    owner, repo = extract_repo(url)
+    endpoint = f"/repos/{owner}/{repo}/commits"
+    return github_request(endpoint)
+
+
+def get_repo_commits_changes(url, commit_sha):
+    owner, repo = extract_repo(url)
+    endpoint = f"/repos/{owner}/{repo}/commits/{commit_sha}"
+    return github_request(endpoint)
