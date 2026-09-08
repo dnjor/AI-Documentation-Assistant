@@ -1,1 +1,10 @@
+# vscode Studio
 .vscode/
+
+# Android Studio
+.idea/
+*.iml
+
+# Build files
+.gradle/
+build/
