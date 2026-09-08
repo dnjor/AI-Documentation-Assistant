@@ -2,22 +2,27 @@
 
 An AI-powered assistant that analyzes GitHub repository changes and
 helps developers understand what documentation should be created or
-updated based on recent commits and changed files
+updated based on recent commits and changed files.
 
-## Overview
+------------------------------------------------------------------------
+
+# Overview
 
 Developers often update their code but forget to update the related
-documentation. This project aims to automate part of the documentation
-workflow by analyzing recent GitHub changes and generating documentation
-recommendations using Gemini AI.
+documentation.
+
+This project automates part of the documentation workflow by analyzing
+GitHub repository changes and generating documentation recommendations
+using Gemini AI.
 
 The user provides a GitHub repository URL, and the system:
 
-1.  Retrieves the latest commits.
-2.  Analyzes changed files and code changes (diffs).
-3.  Sends relevant information to Gemini AI.
-4.  Generates documentation recommendations.
-5.  Returns the result to the user.
+1.  Validates and extracts repository information.
+2.  Retrieves repository data using GitHub REST API.
+3.  Analyzes README content, recent commits, and changed files.
+4.  Sends relevant repository information to Gemini AI.
+5.  Generates documentation recommendations and README updates.
+6.  Returns the analysis result to the user.
 
 ------------------------------------------------------------------------
 
@@ -32,28 +37,41 @@ The user provides a GitHub repository URL, and the system:
 
 ## GitHub Repository Analysis
 
--   Accept GitHub repository URL.
--   Retrieve recent commits using GitHub REST API.
--   Analyze:
-    -   Commit messages.
-    -   Changed files.
-    -   File status (added, modified, deleted).
-    -   Code changes/diffs.
+The system analyzes GitHub repositories using GitHub REST API.
 
-## AI Documentation Generation
+Supported analysis:
+
+-   Repository information.
+-   README content.
+-   Recent commits.
+-   Changed files.
+-   File status:
+    -   Added.
+    -   Modified.
+    -   Deleted.
+
+The system analyzes recent changes to determine whether documentation
+needs to be updated.
+
+## AI Documentation Review
 
 Using Gemini API, the system generates:
 
--   Documentation updates required.
+-   Documentation update recommendations.
 -   Missing README sections.
--   Suggested documentation improvements.
--   Explanations of recent changes.
+-   Configuration documentation suggestions.
+-   Environment variable documentation.
+-   Setup instructions.
+-   Explanations of recent code changes.
 
-## AI Conversation
+The AI compares:
 
--   Users can ask follow-up questions about the generated analysis.
--   The current analysis session can be continued during the active
-    session.
+-   Current README documentation.
+-   Recent commits.
+-   Changed files.
+
+and identifies differences between the documented behavior and the
+actual codebase.
 
 ------------------------------------------------------------------------
 
@@ -61,56 +79,93 @@ Using Gemini API, the system generates:
 
 ``` text
 Android Application (Kotlin)
+
             |
+
+Firebase Authentication
+
             |
-   Firebase Authentication
+
+Firebase Cloud Function
+        (Python)
+
             |
+
+    -----------------
+
+    |               |
+
+GitHub API      Gemini API
+
             |
- Firebase Cloud Function
-       (JavaScript)
-            |
-     -----------------
-     |               |
- GitHub API      Gemini API
-            |
-            |
+
        Firestore
 ```
 
 ------------------------------------------------------------------------
 
-# Development Plan
+# Backend Setup & Environment Configuration
 
-## Phase 1 - Setup
+## Prerequisites
 
--   Create Android project.
--   Configure Firebase.
--   Implement authentication.
--   Setup Firestore.
+-   Python 3.11+
+-   Firebase CLI
 
-## Phase 2 - Backend Integration
+## Environment Variables
 
--   Create Firebase Cloud Functions.
--   Connect GitHub API.
--   Connect Gemini API.
--   Implement authentication validation.
+Create an environment file:
 
-## Phase 3 - Repository Analysis
+``` bash
+cp backend/functions/.env.example backend/functions/.env
+```
 
--   Fetch latest commits.
--   Retrieve changed files.
--   Process code differences.
--   Prepare AI prompts.
+Configure:
 
-## Phase 4 - AI Processing
+``` env
+GEMINI_API_KEY=your_gemini_api_key
+GITHUB_TOKEN=your_github_token
+```
 
--   Generate documentation suggestions.
--   Display results.
--   Support follow-up questions.
+## Backend Installation
 
+Navigate to:
+
+``` bash
+cd backend/functions
+```
+
+Install dependencies:
+
+``` bash
+pip install -r requirements.txt
+```
+
+Run Firebase emulator:
+
+``` bash
+firebase emulators:start
+```
 
 ------------------------------------------------------------------------
 
-# Status
+# Current Status
 
 🚧 Currently under development.
+
+Completed:
+
+✅ Firebase backend setup.\
+✅ GitHub API integration.\
+✅ Gemini API integration.\
+✅ Repository analysis workflow.\
+✅ AI documentation review prototype.
+
+Next steps:
+
+-   Improve AI recommendations.
+-   Optimize repository context handling.
+-   Improve user experience.
+
+### Note
+
+- The latest README updates were generated automatically by the AI documentation assistant review logic based on repository changes, commits, and implementation details.
