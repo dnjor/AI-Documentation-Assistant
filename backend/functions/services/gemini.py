@@ -20,6 +20,7 @@ def ask_gemini(prompt):
 def create_prompt(data):
 
     return REPOSITORY_REVIEW_PROMPT.format(
+        user_request=data["user_request"],
         owner=data["owner"],
         repo=data["repo"],
         description=data["description"],
