@@ -22,9 +22,6 @@ Description:
 Main Language:
 {language}
 
-Stars:
-{stars}
-
 Created Date:
 {created_at}
 
@@ -43,14 +40,14 @@ README CONTENT
 
 REPOSITORY FILE STRUCTURE
 
-{files_structure}
+
 
 
 ==================================================
 
-RECENT COMMITS
+Last Commits
 
-{recent_commits}
+{last_commits}
 
 
 ==================================================

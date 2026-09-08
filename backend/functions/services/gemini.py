@@ -1,5 +1,5 @@
 from google import genai
-from backend.functions.services.repository_prompt import REPOSITORY_REVIEW_PROMPT
+from services.repository_prompt import REPOSITORY_REVIEW_PROMPT
 from config import GEMINI_API_KEY
 
 
@@ -27,7 +27,6 @@ def create_prompt(data):
         created_at=data["created_at"],
         updated_at=data["updated_at"],
         readme_content=data["readme"],
-        files_structure=data["files"],
-        recent_commits=data["commits"],
+        last_commits=data["commits"],
         commit_changes=data["changes"]
     )

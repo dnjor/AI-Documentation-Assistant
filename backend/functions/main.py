@@ -1,35 +1,59 @@
 from firebase_functions import https_fn
 from firebase_admin import initialize_app
 
-from google import genai
-from config import GEMINI_API_KEY
+from services.gemini import ask_gemini, create_prompt
+from services.github import get_repo_info, get_repo_readme, get_repo_file_content, get_repo_commits, get_repo_commits_changes
 
 initialize_app()
 
-def ask_gemini(question):
-    if not GEMINI_API_KEY:
-        raise ValueError("GEMINI_API_KEY is not set. Please set it in the .env file.")
-
-    client = genai.Client(api_key=GEMINI_API_KEY)
-
-    response = client.models.generate_content(
-        model="gemini-3.6-flash",
-        contents=f"{question}, please answer in Arabic, and provide a detailed explanation."
-    )
-
-    return response.text
 
 @https_fn.on_request()
 def ask_ai(request: https_fn.Request):
 
-    question = request.args.get("question")
+    data = request.args.get("url_repo")
 
-    if not question:
+    if not data:
         return https_fn.Response(
-            "Missing question",
+            "Missing repository URL",
             status=400
         )
 
-    answer = ask_gemini(question)
+    # Fetch repository information
+    repo_info = get_repo_info(data)
+    readme_content = get_repo_readme(data)
+    commits = get_repo_commits(data)
+
+    commits = get_repo_commits(data)
+
+    for commit in commits[:5]:
+        commit_sha = commit["sha"]
+
+        commit_changes = get_repo_commits_changes(
+            data,
+            commit_sha
+        )
+
+        commit["changes"] = [
+            {
+                "filename": file["filename"],
+                "status": file["status"]
+            }
+            for file in commit_changes.get("files", [])
+        ]
+
+    # Create the prompt for the AI
+    prompt = create_prompt({
+        "owner": repo_info["owner"],
+        "repo": repo_info["name"],
+        "description": repo_info["description"],
+        "language": repo_info["language"],
+        "created_at": repo_info["created_at"],
+        "updated_at": repo_info["updated_at"],
+        "readme": readme_content[:12000],  # Limit to the first 12000 characters for brevity,
+        "commits": commits[:5],  # Limit to the first 5 commits for brevity
+        "changes": [commit["changes"] for commit in commits[:5]]  # Limit to the first 5 commits for brevity
+    })
+
+    answer = ask_gemini(prompt)
 
     return https_fn.Response(answer)

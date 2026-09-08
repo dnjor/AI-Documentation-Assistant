@@ -1,6 +1,8 @@
 from config import GITHUB_TOKEN
 import requests
 from urllib.parse import urlparse
+import base64
+
 
 BASE_URL = "https://api.github.com"
 
@@ -49,7 +51,13 @@ def get_repo_info(url):
 def get_repo_readme(url):
     owner, repo = extract_repo(url)
     endpoint = f"/repos/{owner}/{repo}/readme"
-    return github_request(endpoint)
+    response = github_request(endpoint)
+
+    content = response["content"]
+
+    decoded_content = base64.b64decode(content).decode("utf-8")
+
+    return decoded_content
 
 
 def get_repo_file_content(url, file_path):
