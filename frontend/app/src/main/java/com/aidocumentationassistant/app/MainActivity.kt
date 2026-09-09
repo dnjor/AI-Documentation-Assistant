@@ -13,6 +13,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import com.aidocumentationassistant.app.ui.theme.FrontendTheme
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class MainActivity : ComponentActivity() {
@@ -32,35 +35,44 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MyInput() {
 
-    var name by remember {
-        mutableStateOf("")
-    }
-
-    var greeting by remember {
+    var data by remember {
         mutableStateOf("")
     }
 
     Column {
         TextField(
-            value = name,
+            value = data,
             onValueChange = { newValue ->
-                name = newValue
+                data = newValue
             },
             label = {
-                Text("Enter your name")
+                Text("Enter your question")
             }
         )
 
         Button(
             onClick = {
-                greeting = "hello $name"
+
+                CoroutineScope(Dispatchers.IO).launch {
+
+                    try {
+
+                        val response = ApiClient.api.analyzeRepository(
+                            RepoRequest(data)
+                        )
+
+                        println(response.message)
+
+                    } catch (e: Exception) {
+
+                        println(e.message)
+
+                    }
+                }
+
             }
         ) {
             Text("Submit")
         }
-
-        Text(
-            text = greeting
-        )
     }
 }
