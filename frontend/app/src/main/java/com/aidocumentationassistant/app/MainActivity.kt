@@ -16,7 +16,7 @@ import com.aidocumentationassistant.app.ui.theme.FrontendTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-
+import android.util.Log
 
 class MainActivity : ComponentActivity() {
 
@@ -39,6 +39,10 @@ fun MyInput() {
         mutableStateOf("")
     }
 
+    var isLoading by remember {
+        mutableStateOf(false)
+    }
+
     Column {
         TextField(
             value = data,
@@ -51,28 +55,41 @@ fun MyInput() {
         )
 
         Button(
+            enabled = !isLoading,
             onClick = {
+
+                isLoading = true
+
+                Log.d("BUTTON_TEST", "Button clicked")
 
                 CoroutineScope(Dispatchers.IO).launch {
 
                     try {
 
-                        val response = ApiClient.api.analyzeRepository(
-                            RepoRequest(data)
+                        Log.d("API_TEST", "Sending request...")
+
+                        val response = ApiClient.api.askAI(
+                            RepoRequest(message = data)
                         )
 
-                        println(response.message)
+                        Log.d("API_TEST", response.answer)
 
                     } catch (e: Exception) {
 
-                        println(e.message)
+                        Log.e("API_ERROR", e.message ?: "Unknown error")
 
+                    } finally {
+                        isLoading = false
                     }
                 }
 
             }
         ) {
-            Text("Submit")
+            if(isLoading) {
+                Text("Loding..")
+            } else {
+                Text("Submit")
+            }
         }
     }
 }

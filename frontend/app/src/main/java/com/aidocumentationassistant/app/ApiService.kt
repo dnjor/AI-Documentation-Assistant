@@ -4,16 +4,17 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 data class RepoRequest(
-    val repoUrl: String
-)
-
-data class RepoResponse(
     val message: String
 )
 
+data class RepoResponse(
+    val mode: String,
+    val answer: String
+)
+
 interface ApiService {
-    @POST("analyze")
-    suspend fun analyzeRepository(
+    @POST("ask_ai")
+    suspend fun askAI(
         @Body request: RepoRequest
     ):RepoResponse
 }
