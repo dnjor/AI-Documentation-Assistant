@@ -131,13 +131,13 @@ prototype - Android frontend prototype
 ## Mobile Application
 
 ### Home Screen
-<img src="docs/screenshots/home_screen.png" width="300"/>
+<img src="screenshots/home_screen.png" width="300"/>
 
 ### Repository Analysis
-<img src="docs/screenshots/analysis_screen.png" width="300"/>
+<img src="screenshots/analysis_screen.png" width="300"/>
 
 ### AI Documentation Result
-<img src="docs/screenshots/result_screen.png" width="300"/>
+<img src="screenshots/result_screen.png" width="300"/>
 
 ## Note
 
