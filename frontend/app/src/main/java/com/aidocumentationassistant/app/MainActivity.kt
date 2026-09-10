@@ -17,6 +17,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import android.util.Log
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 
 class MainActivity : ComponentActivity() {
 
@@ -34,8 +40,13 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MyInput() {
+    val scrollState = rememberScrollState()
 
     var data by remember {
+        mutableStateOf("")
+    }
+
+    var answer by remember {
         mutableStateOf("")
     }
 
@@ -43,7 +54,11 @@ fun MyInput() {
         mutableStateOf(false)
     }
 
-    Column {
+    Column(
+        modifier = Modifier
+            .verticalScroll(scrollState)
+            .padding(20.dp)
+    ) {
         TextField(
             value = data,
             onValueChange = { newValue ->
@@ -72,11 +87,11 @@ fun MyInput() {
                             RepoRequest(message = data)
                         )
 
-                        Log.d("API_TEST", response.answer)
+                        answer = response.answer
 
                     } catch (e: Exception) {
 
-                        Log.e("API_ERROR", e.message ?: "Unknown error")
+                        answer = "Error: ${e.message}"
 
                     } finally {
                         isLoading = false
@@ -86,10 +101,25 @@ fun MyInput() {
             }
         ) {
             if(isLoading) {
-                Text("Loding..")
+                Text("Analyzing..")
             } else {
-                Text("Submit")
+                Text("Analyze Repository")
             }
+        }
+
+        if (isLoading) {
+
+            CircularProgressIndicator()
+
+        }
+
+        if (answer.isNotEmpty()) {
+
+            Text(
+                text = answer,
+                modifier = Modifier.padding(top = 20.dp)
+            )
+
         }
     }
 }
