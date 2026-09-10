@@ -4,116 +4,75 @@ An AI-powered assistant that analyzes GitHub repository changes and
 helps developers understand what documentation should be created or
 updated based on recent commits and changed files.
 
-------------------------------------------------------------------------
+## Overview
 
-# Overview
+This project automates documentation review by analyzing GitHub
+repositories and generating recommendations using Gemini AI.
 
-Developers often update their code but forget to update the related
-documentation.
+The system: 1. Validates repository information. 2. Retrieves GitHub
+data. 3. Analyzes README, commits, and changed files. 4. Sends context
+to Gemini AI. 5. Generates documentation recommendations.
 
-This project automates part of the documentation workflow by analyzing
-GitHub repository changes and generating documentation recommendations
-using Gemini AI.
+## Features
 
-The user provides a GitHub repository URL, and the system:
+### GitHub Repository Analysis
 
-1.  Validates and extracts repository information.
-2.  Retrieves repository data using GitHub REST API.
-3.  Analyzes README content, recent commits, and changed files.
-4.  Sends relevant repository information to Gemini AI.
-5.  Generates documentation recommendations and README updates.
-6.  Returns the analysis result to the user.
+-   Repository information
+-   README content
+-   Recent commits
+-   Changed files
+-   File status (Added, Modified, Deleted)
 
-------------------------------------------------------------------------
+### AI Documentation Review
 
-# Features
+Generates: - Documentation update recommendations - Missing README
+sections - Setup instructions - Configuration suggestions - Explanations
+of code changes
 
-## Authentication
+### Interactive AI Chat & Input Parsing
 
--   User registration and login.
--   Authentication handled by Firebase Authentication.
--   Backend functions validate authenticated users before processing
-    requests.
+Supports: - GitHub URL detection - Repository analysis requests -
+Documentation questions - Follow-up explanations
 
-## GitHub Repository Analysis
-
-The system analyzes GitHub repositories using GitHub REST API.
-
-Supported analysis:
-
--   Repository information.
--   README content.
--   Recent commits.
--   Changed files.
--   File status:
-    -   Added.
-    -   Modified.
-    -   Deleted.
-
-The system analyzes recent changes to determine whether documentation
-needs to be updated.
-
-## AI Documentation Review
-
-Using Gemini API, the system generates:
-
--   Documentation update recommendations.
--   Missing README sections.
--   Configuration documentation suggestions.
--   Environment variable documentation.
--   Setup instructions.
--   Explanations of recent code changes.
-
-The AI compares:
-
--   Current README documentation.
--   Recent commits.
--   Changed files.
-
-and identifies differences between the documented behavior and the
-actual codebase.
-
-------------------------------------------------------------------------
-
-# System Architecture
+## System Architecture
 
 ``` text
-Android Application (Kotlin)
-
-            |
-
-Firebase Authentication
-
-            |
-
-Firebase Cloud Function
-        (Python)
-
-            |
-
-    -----------------
-
-    |               |
-
-GitHub API      Gemini API
-
-            |
-
-       Firestore
+Android Application (Kotlin + Jetpack Compose)
+                 |
+        Firebase Cloud Function
+                 |
+        -----------------
+        |               |
+    GitHub API      Gemini API
 ```
 
-------------------------------------------------------------------------
+## Project Structure
 
-# Backend Setup & Environment Configuration
+``` text
+AI-Documentation-Assistant
+|
+├── frontend/
+|   └── Android Kotlin Jetpack Compose app
+|
+├── backend/
+|   └── Firebase Cloud Functions (Python)
+|       ├── services/
+|       ├── tests/
+|       └── main.py
+|
+└── README.md
+```
 
-## Prerequisites
+## Backend Setup
+
+### Prerequisites
 
 -   Python 3.11+
 -   Firebase CLI
 
-## Environment Variables
+### Environment Variables
 
-Create an environment file:
+Create:
 
 ``` bash
 cp backend/functions/.env.example backend/functions/.env
@@ -126,46 +85,62 @@ GEMINI_API_KEY=your_gemini_api_key
 GITHUB_TOKEN=your_github_token
 ```
 
-## Backend Installation
-
-Navigate to:
+### Install Dependencies
 
 ``` bash
 cd backend/functions
-```
-
-Install dependencies:
-
-``` bash
 pip install -r requirements.txt
 ```
 
-Run Firebase emulator:
+### Run Firebase Emulator
 
 ``` bash
 firebase emulators:start
 ```
 
-------------------------------------------------------------------------
+## Frontend Setup (Android)
 
-# Current Status
+### Prerequisites
 
-🚧 Currently under development.
+-   Android Studio Hedgehog or newer
+-   JDK 17+
+-   Android SDK API 34+
 
-Completed:
+### Running
 
-✅ Firebase backend setup.\
-✅ GitHub API integration.\
-✅ Gemini API integration.\
-✅ Repository analysis workflow.\
-✅ AI documentation review prototype.
+1.  Open Android Studio.
+2.  Open the frontend directory.
+3.  Sync Gradle.
+4.  Run on emulator or Android device.
 
-Next steps:
+## Running Backend Tests
 
--   Improve AI recommendations.
--   Optimize repository context handling.
--   Improve user experience.
+``` bash
+cd backend/functions
+pytest
+```
 
-### Note
+## Current Status
 
-- The latest README updates were generated automatically by the AI documentation assistant review logic based on repository changes, commits, and implementation details.
+Completed: - Firebase backend setup - GitHub API integration - Gemini
+API integration - Repository analysis workflow - AI documentation review
+prototype - Android frontend prototype
+
+# Screenshots
+
+## Mobile Application
+
+### Home Screen
+<img src="docs/screenshots/home_screen.png" width="300"/>
+
+### Repository Analysis
+<img src="docs/screenshots/analysis_screen.png" width="300"/>
+
+### AI Documentation Result
+<img src="docs/screenshots/result_screen.png" width="300"/>
+
+## Note
+
+README improvements can be generated automatically by the AI
+Documentation Assistant based on repository changes and implementation
+details.
